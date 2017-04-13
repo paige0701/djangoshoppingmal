@@ -47,10 +47,11 @@ INSTALLED_APPS = [
 
     # 'social.apps.django_app.default',
     'social_django',
+
 ]
 
 # Ensure the SITE_ID is defined
-SITE_ID = 1
+SITE_ID = 2
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -80,6 +81,8 @@ TEMPLATES = [
                 'social_django.context_processors.backends',
                 'social_django.context_processors.login_redirect',
 
+                # 'social.apps.django_app.context_processors.backends',
+                # 'social.apps.django_app.context_processors.login_redirect',
 
 
             ],
@@ -151,7 +154,7 @@ STATICFILES_DIRS = [
 
 LOGIN_URL = 'login'
 LOGOUT_URL = 'logout'
-LOGIN_REDIRECT_URL = 'home'
+# LOGIN_REDIRECT_URL = 'home'
 
 
 
@@ -175,8 +178,6 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_USE_SSL = True
 
 
-
-
 AUTHENTICATION_BACKENDS = (
     # Needed to login by username in Django admin and to ensure compatibility with other packages
     'django.contrib.auth.backends.ModelBackend',
@@ -184,28 +185,32 @@ AUTHENTICATION_BACKENDS = (
     # 'allauth.account.auth_backends.AuthenticationBackend',
     # 'social.backends.facebook.FacebookOAuth2',
     # 'social.*',
-    'social_core.backends.github.GithubOAuth2',
-    'social_core.backends.twitter.TwitterOAuth',
+    # 'social_core.backends.github.GithubOAuth2',
+    # 'social_core.backends.twitter.TwitterOAuth',
     'social_core.backends.facebook.FacebookOAuth2',
+    'social_core.backends.open_id.OpenIdAuth',
+
+
+    # 'social.backends.facebook.FacebookOAuth2',
 
 
 )
 
 
-SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'
-SOCIAL_AUTH_URL_NAMESPACE = 'social'
+# SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'
+# SOCIAL_AUTH_URL_NAMESPACE = 'social'
 
 
 # Facebook
 SOCIAL_AUTH_FACEBOOK_KEY = '1441816456116895'
 SOCIAL_AUTH_FACEBOOK_SECRET = '6da79d177ac445d25cb36a749390a4d5'
 
-SOCIAL_AUTH_PIPELINE = ( 'social.pipeline.social_auth.social_details',
-                         'social.pipeline.social_auth.social_uid',
-                         'social.pipeline.social_auth.auth_allowed',
-                         'social.pipeline.social_auth.social_user',
-                         'social.pipeline.user.get_username',
-                         'social.pipeline.user.create_user',
-                         'social.pipeline.social_auth.associate_user',
-                         'social.pipeline.social_auth.load_extra_data',
-                         'social.pipeline.user.user_details')
+# SOCIAL_AUTH_PIPELINE = ( 'social.pipeline.social_auth.social_details',
+#                          'social.pipeline.social_auth.social_uid',
+#                          'social.pipeline.social_auth.auth_allowed',
+#                          'social.pipeline.social_auth.social_user',
+#                          'social.pipeline.user.get_username',
+#                          'social.pipeline.user.create_user',
+#                          'social.pipeline.social_auth.associate_user',
+#                          'social.pipeline.social_auth.load_extra_data',
+#                          'social.pipeline.user.user_details')

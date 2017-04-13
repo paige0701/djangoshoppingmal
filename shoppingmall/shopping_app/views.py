@@ -19,6 +19,13 @@ from django.conf import settings
 
 from django.conf import settings
 
+def beforelogin(request):
+    return render(request,'beforelogin.html')
+
+def accountactivationsent(request):
+    print("activation sent !!!")
+    return render(request, 'auth/account_activation_sent.html')
+
 def index(request):
     print("$$$ this is called !!cl")
 
@@ -43,23 +50,21 @@ def signup(request):
             # user.email_user(subject,message, settings.DEFAULT_FROM_EMAIL)
             from_email = settings.EMAIL_HOST_USER
             to_list = [user.email,settings.EMAIL_HOST_USER]
-            send_mail(subject, message, from_email, to_list, fail_silently=True)
+            send_mail(subject, message, from_email, to_list)
 
             print("current site = ", current_site)
             # return redirect('account_activation_sent')
 
-            # return redirect(reverse('aaa'))
+            return redirect('accountactivationsent')
             # return render(request, 'auth/account_activation_sent.html')
-            return HttpResponseRedirect('/aaa/')
+            # return HttpResponseRedirect('/aaa/')
     else:
         print('hello')
         form = RegisterForm()
     return render(request, 'auth/register.html', {'form':form})
 
 
-def account_activation_sent(request):
-    print("activation sent !!!")
-    return render(request, 'auth/account_activation_sent.html')
+
 
 
 def aaa(request):
