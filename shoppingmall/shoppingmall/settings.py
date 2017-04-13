@@ -214,3 +214,8 @@ SOCIAL_AUTH_FACEBOOK_SECRET = '6da79d177ac445d25cb36a749390a4d5'
 #                          'social.pipeline.social_auth.associate_user',
 #                          'social.pipeline.social_auth.load_extra_data',
 #                          'social.pipeline.user.user_details')
+
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
+SOCAIL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
+    'fields': 'id, name'
+}

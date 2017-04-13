@@ -12,7 +12,7 @@ from django.contrib.auth import login
 # Create your views here.
 from shopping_app.models import User
 from shopping_app.tokens import account_activation_token
-
+from django.contrib.auth.backends import ModelBackend
 from django.core.mail import send_mail
 from django.conf import settings
 
@@ -85,7 +85,7 @@ def activate(request, uidb64, token):
         user.is_active = True
         user.profile.email_confirmed = True
         user.save()
-        login(request, user)
+        login(request, user, backend=ModelBackend)
         return redirect('home')
     else:
         return render(request, 'auth/account_activation_invalid.html')
