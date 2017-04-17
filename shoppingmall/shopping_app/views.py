@@ -19,6 +19,9 @@ from django.conf import settings
 
 from django.conf import settings
 
+from shopping_app.utils import ViewIncrease
+
+
 def beforelogin(request):
     return render(request,'beforelogin.html')
 
@@ -29,8 +32,10 @@ def accountactivationsent(request):
 def index(request):
     print("$$$ this is called !!cl")
 
-    product = Product.objects.all()
+    # product = Product.objects.all()
+    product = Product.objects.order_by('-views')
     category = Category.objects.all()
+
 
     # Poducts.object.all()
 
@@ -95,18 +100,18 @@ def activate(request, uidb64, token):
 
 def detail(request, id):
 
-    product = Product.objects.get(id=id)
-    print(product)
+    # increase view count
+    ViewIncrease().increaseview(id=id)
 
+
+    product = Product.objects.get(id=id)
+    print("view count = ", product.views)
     return render(request, 'productdetail.html', {'product':product})
 
 
 def category(request, id):
 
     one = Category.objects.get(id=id)
-    category = Category.objects.all()
     product = Product.objects.filter(category=id)
 
-
-
-    return render(request, 'category.html',{'category':category, 'one':one, 'product':product} )
+    return render(request, 'category.html', {'product':product, 'one':one})

@@ -1,5 +1,63 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    {{ product.name }}
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="thumbnail">
+                <img class='image-responsive detail-image' src='/media/{{ product.image }}' />
+            </div>
+
+        </div>
+        <div class="col-md-6">
+            <h1>{{ product.name }} <a href="/" class="glyphicon glyphicon-thumbs-up"></a></h1>
+            <div class="caption-full">
+                <h2 class=''>$ {{ product.price }}</h2>
+                <p>{{ product.views }} clicks</p>
+                <p>{{ product.likes }} likes</p>
+            </div>
+
+
+
+            <button class="btn btn-block btn-default">Cart</button>
+            <button class="btn btn-block btn-primary">Buy Now</button>
+        </div>
+
+
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-12">
+            <h3>Product Description</h3>
+            <div class="well">
+
+                {{ product.description }}
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Product Reviews</h3>
+            <div class="well">
+                <div class="text-right">
+                    <a class='btn btn-lg btn-primary' href=''>add comments</a>
+                </div>
+                <hr />
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <strong>Username</strong>
+                        <span class="pull-right">10 days ago</span>
+                        <p>This is alright</p>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
 {% endblock %}
