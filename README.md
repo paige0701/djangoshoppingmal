@@ -1,8 +1,21 @@
 # shopping_mall
 
-## To-do 2017/04/13
+## django-study
 
+[USER]
 - login/logout
 - 회원가입
 - email 인증
 - social login
+
+
+[PRODUCT]
+- 라이크
+- 후기
+- 조회수
+- 이미지
+
+[CART]
+- 추가/삭제
+- 결제로 
+
