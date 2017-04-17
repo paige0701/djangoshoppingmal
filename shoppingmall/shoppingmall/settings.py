@@ -69,6 +69,7 @@ ROOT_URLCONF = 'shoppingmall.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
+
         'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -77,6 +78,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+
 
                 'social_django.context_processors.backends',
                 'social_django.context_processors.login_redirect',
@@ -87,6 +89,12 @@ TEMPLATES = [
 
             ],
         },
+    },
+    {
+        'BACKEND': 'django.template.backends.jinja2.Jinja2',
+        'OPTIONS': {
+            'environment': 'shopping_app.jinja2.environment',
+        }
     },
 ]
 
@@ -152,9 +160,14 @@ STATICFILES_DIRS = [
 ]
 
 
-LOGIN_URL = 'login'
-LOGOUT_URL = 'logout'
-# LOGIN_REDIRECT_URL = 'home'
+MEDIA_URL = '/media/'
+# MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'static','media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+LOGIN_URL = '/'
+LOGOUT_URL = '/'
+LOGIN_REDIRECT_URL = '/'
 
 
 

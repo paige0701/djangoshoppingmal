@@ -1,7 +1,11 @@
 {% extends 'base.html' %}
-{% load staticfiles %}
 
 {% block content %}
+    <div class="heading">
+        {{ one.name }}
+
+    </div>
+
     {% if product %}
         <div class='row text-center' style='display:flex; flex-wrap:wrap'>
             {% for x in product %}
@@ -10,7 +14,7 @@
 
                     <div class='thumbnail'>
                         {#                {% static '{{ x.image }}' as myphoto %}#}
-                        <img src="media/{{ x.image }}" />
+                        <img src="/media/{{ x.image }}" />
                         {#                {{ x.image }}#}
                         <div class='caption'>
                             <h4>{{ x.name }}</h4>
@@ -21,6 +25,4 @@
             {% endfor %}
         </div>
     {% endif %}
-
-
 {% endblock %}

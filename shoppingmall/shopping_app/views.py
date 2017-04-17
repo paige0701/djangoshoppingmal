@@ -10,7 +10,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from shopping_app.forms import RegisterForm
 from django.contrib.auth import login
 # Create your views here.
-from shopping_app.models import User
+from shopping_app.models import User, Product, Category
 from shopping_app.tokens import account_activation_token
 from django.contrib.auth.backends import ModelBackend
 from django.core.mail import send_mail
@@ -29,7 +29,12 @@ def accountactivationsent(request):
 def index(request):
     print("$$$ this is called !!cl")
 
-    return render(request, 'home.html')
+    product = Product.objects.all()
+    category = Category.objects.all()
+
+    # Poducts.object.all()
+
+    return render(request, 'home.html', {'product':product, 'category':category})
 
 
 def signup(request):
@@ -64,9 +69,6 @@ def signup(request):
     return render(request, 'auth/register.html', {'form':form})
 
 
-
-
-
 def aaa(request):
     print("here ???")
     console.log("hello ?")
@@ -89,3 +91,22 @@ def activate(request, uidb64, token):
         return redirect('home')
     else:
         return render(request, 'auth/account_activation_invalid.html')
+
+
+def detail(request, id):
+
+    product = Product.objects.get(id=id)
+    print(product)
+
+    return render(request, 'productdetail.html', {'product':product})
+
+
+def category(request, id):
+
+    one = Category.objects.get(id=id)
+    category = Category.objects.all()
+    product = Product.objects.filter(category=id)
+
+
+
+    return render(request, 'category.html',{'category':category, 'one':one, 'product':product} )

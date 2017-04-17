@@ -1,10 +1,15 @@
+from django.conf import settings
 from django.conf.urls import url, include
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.views.generic.edit import CreateView
-from shopping_app.forms import RegisterForm
 from django.contrib.auth import views as auth_views
-from shopping_app.views import index, signup, activate, aaa, beforelogin, accountactivationsent
+
+from shopping_app.views import index, signup, activate, aaa, beforelogin, accountactivationsent, category
 from social_django.urls import urlpatterns as social_django_urls
+
+from shopping_app.views import detail
+
 urlpatterns = [
     # url(r'^register/', CreateView.as_view(
     #     template_name='auth/register.html',
@@ -30,6 +35,8 @@ urlpatterns = [
     # url(r'', include('social.apps.django_app.urls', namespace='social')),
     url(r'^beforelogin/$', beforelogin, name='beforelogin'),
 
+    url(r'^detail/(?P<id>[0-9]+)/$', detail, name='detail'),
+    url(r'^category/(?P<id>[0-9]+)/$', category, name='category'),
 
-]
-
+    # 이걸 꼭 추가 해야한다 아니면 이미지를 찾지를 못하
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
