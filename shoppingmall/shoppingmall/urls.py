@@ -38,5 +38,6 @@ urlpatterns = [
     url(r'^detail/(?P<id>[0-9]+)/$', detail, name='detail'),
     url(r'^category/(?P<id>[0-9]+)/$', category, name='category'),
 
-    # 이걸 꼭 추가 해야한다 아니면 이미지를 찾지를 못하
+
+    # 이걸 꼭 추가 해야한다 아니면 이미지를 찾지를 못하던데 ??
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

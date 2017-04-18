@@ -1,5 +1,6 @@
-from shopping_app.models import Product
+from django.http import request
 
+from shopping_app.models import Product, Comment, User
 
 
 # 이것도 하루에 한번만 view 가 올라간다던지 아이피 주소에 한번만 올라간다던지 뭐 그런식으로 할 수 잇으면 해보자
@@ -11,3 +12,19 @@ class ViewIncrease(object):
         product.views += 1
         product.save()
         return product
+
+
+class CommentClass(object):
+    def addcomment(self,username,content,product):
+        print(username)
+        print(content)
+        print(product)
+
+        user = User.objects.get(id=username)
+        product = Product.objects.get(id=product)
+
+        print(User.id)
+        comment = Comment(author=user, content=content, product=product)
+        comment.save()
+        print(comment)
+        return comment

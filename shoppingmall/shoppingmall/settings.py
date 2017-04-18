@@ -48,7 +48,14 @@ INSTALLED_APPS = [
     # 'social.apps.django_app.default',
     'social_django',
 
+    # 댓글 기능 추가
+    # 'disqus',
+
+
 ]
+
+# DISQUS_API_KEY = 'DndT7Q6MXyf3Mtf8Hv1CcnMCrHSZhNpGYwdKEIZutpFvgimqwSGxWLTnq4kAoZ0V'
+# DISQUS_WEBSITE_SHORTNAME = 'http-127-0-0-1-8000-4'
 
 # Ensure the SITE_ID is defined
 SITE_ID = 2

@@ -1,11 +1,15 @@
 appdirs==1.4.3
 defusedxml==0.5.0
+disqus==0.0.4
 Django==1.10.6
+django-disqus==0.5
 Jinja2==2.9.6
 MarkupSafe==1.0
+mock==2.0.0
 oauthlib==2.0.2
 olefile==0.44
 packaging==16.8
+pbr==2.1.0
 Pillow==4.1.0
 PyJWT==1.4.2
 pyparsing==2.2.0

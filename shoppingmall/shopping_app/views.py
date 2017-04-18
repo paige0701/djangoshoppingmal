@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail.backends import console
 from django.http import HttpResponseRedirect
@@ -7,10 +8,10 @@ from django.urls import reverse
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 
-from shopping_app.forms import RegisterForm
+from shopping_app.forms import RegisterForm, CommentForm
 from django.contrib.auth import login
 # Create your views here.
-from shopping_app.models import User, Product, Category
+from shopping_app.models import User, Product, Category, Comment
 from shopping_app.tokens import account_activation_token
 from django.contrib.auth.backends import ModelBackend
 from django.core.mail import send_mail
@@ -19,7 +20,7 @@ from django.conf import settings
 
 from django.conf import settings
 
-from shopping_app.utils import ViewIncrease
+from shopping_app.utils import ViewIncrease, CommentClass
 
 
 def beforelogin(request):
@@ -98,15 +99,31 @@ def activate(request, uidb64, token):
         return render(request, 'auth/account_activation_invalid.html')
 
 
+@login_required(login_url='login')
 def detail(request, id):
 
     # increase view count
     ViewIncrease().increaseview(id=id)
 
-
     product = Product.objects.get(id=id)
     print("view count = ", product.views)
-    return render(request, 'productdetail.html', {'product':product})
+
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            content = request.POST.get('content')
+            comment = CommentClass().addcomment(request.user.id,content,id)
+            comment = Comment.objects.filter(product=id)
+            form = CommentForm()
+            return render(request, 'productdetail.html', {'product':product, 'form':form, 'comment':comment})
+            # return redirect('detail',{'product':product, 'form':form, 'comment':comment} )
+
+    comment = Comment.objects.filter(product=id)
+
+    form = CommentForm()
+
+
+    return render(request, 'productdetail.html', {'product':product, 'form':form, 'comment':comment} )
 
 
 def category(request, id):

@@ -42,16 +42,28 @@
         <div class="col-md-12">
             <h3>Product Reviews</h3>
             <div class="well">
-                <div class="text-right">
-                    <a class='btn btn-lg btn-primary' href=''>add comments</a>
+                <div class="row">
+                    <div class="col-md-12">
+                {% for x in comment %}
+                    <strong>{{ x.author }}</strong>
+                    <span class="pull-right">{{ x.created }}</span>
+                    <p>{{ x.content }}</p>
+                    <hr/>
+                {% endfor %}
+
+                    </div>
                 </div>
-                <hr />
+                
 
                 <div class="row">
                     <div class="col-md-12">
-                        <strong>Username</strong>
-                        <span class="pull-right">10 days ago</span>
-                        <p>This is alright</p>
+
+                        <form method="post" action="{% url 'detail' product.id %}">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <button type="submit">Comment</button>
+                        </form>
+
                     </div>
 
                 </div>

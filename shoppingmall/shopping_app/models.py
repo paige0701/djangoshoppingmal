@@ -40,17 +40,6 @@ class Category(models.Model):
         return self.name
 
 
-class Comment(models.Model):
-
-    author = models.ForeignKey(User)
-    content = models.TextField(max_length=300)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.author.email
-
-
 class Product(models.Model):
     name = models.CharField(max_length=100)
     price = models.DecimalField(decimal_places=2, max_digits=5)
@@ -62,7 +51,26 @@ class Product(models.Model):
     likes = models.IntegerField()
     manufacturer = models.CharField(max_length=50)
     category = models.ForeignKey(Category)
-    # comments = models.ForeignKey(Comment)
+    # comments = models.ForeignKey(Comment, blank=True, null=True)
 
     def __str__(self):
         return self.name
+
+
+
+class Comment(models.Model):
+
+    author = models.ForeignKey(User)
+    content = models.TextField(max_length=300)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now_add=True)
+    product = models.ForeignKey(Product, related_name='comment', null=True, blank=True)
+
+
+    def __str__(self):
+        return self.author.email
+
+
+
+
+
