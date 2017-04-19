@@ -10,17 +10,12 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 
 from shopping_app.forms import RegisterForm, CommentForm
 from django.contrib.auth import login
-# Create your views here.
-from shopping_app.models import User, Product, Category, Comment
+from shopping_app.models import User, Product, Category, Comment, Cart
 from shopping_app.tokens import account_activation_token
 from django.contrib.auth.backends import ModelBackend
 from django.core.mail import send_mail
 from django.conf import settings
-
-
-from django.conf import settings
-
-from shopping_app.utils import ViewIncrease, CommentClass
+from shopping_app.utils import ViewIncrease, CommentClass, CartClass
 
 
 def beforelogin(request):
@@ -99,6 +94,8 @@ def activate(request, uidb64, token):
         return render(request, 'auth/account_activation_invalid.html')
 
 
+# 로그인을 하지 않으면 detail 페이지로 갈 수 없게 한다
+# if not logged in, it redirects to login
 @login_required(login_url='login')
 def detail(request, id):
 
@@ -106,22 +103,29 @@ def detail(request, id):
     ViewIncrease().increaseview(id=id)
 
     product = Product.objects.get(id=id)
-    print("view count = ", product.views)
-
-    if request.method == 'POST':
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            content = request.POST.get('content')
-            comment = CommentClass().addcomment(request.user.id,content,id)
-            comment = Comment.objects.filter(product=id)
-            form = CommentForm()
-            return render(request, 'productdetail.html', {'product':product, 'form':form, 'comment':comment})
-            # return redirect('detail',{'product':product, 'form':form, 'comment':comment} )
 
     comment = Comment.objects.filter(product=id)
 
     form = CommentForm()
 
+    # if comment form is submitted
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+
+        # and if form that is submitted is validated
+        if form.is_valid():
+
+            # getting the content from the form
+            content = request.POST.get('content')
+
+            # adding the comment
+            CommentClass().addcomment(request.user.id,content,id)
+
+            # only getting the comment related to this product id
+            comment = Comment.objects.filter(product=id)
+
+            form = CommentForm()
+            return render(request, 'productdetail.html', {'product':product, 'form':form, 'comment':comment})
 
     return render(request, 'productdetail.html', {'product':product, 'form':form, 'comment':comment} )
 
@@ -132,3 +136,50 @@ def category(request, id):
     product = Product.objects.filter(category=id)
 
     return render(request, 'category.html', {'product':product, 'one':one})
+
+
+def cart(request):
+
+    cart = Cart.objects.filter(user=request.user.id)
+    total = 0
+
+    for x in cart:
+        total += x.get_subtotal()
+    print("total = ", total)
+
+    return render(request, 'cart.html', {'cart': cart, 'total':total})
+
+
+def cart_edit(request, id):
+    print("here")
+    total = 0
+    user = request.user.id
+    if request.method == 'POST':
+
+        quantity = request.POST.get('quantity')
+
+        CartClass().editCart(user,id, quantity)
+
+        cart = Cart.objects.filter(user=user)
+
+        for x in cart:
+            total += x.get_subtotal()
+
+        return render(request, 'cart.html', {'cart': cart, 'total': total} )
+
+
+def cart_add(request,id):
+    total = 0
+    if request.method == 'POST':
+        user =request.user.id
+        product_id = id
+        quantity = request.POST.get('quantity')
+
+        CartClass().addCart(user, product_id, quantity)
+
+        cart = Cart.objects.filter(user=user)
+        for x in cart:
+            total += x.get_subtotal()
+
+
+        return render(request, 'cart.html', {'cart': cart, 'total':total} )

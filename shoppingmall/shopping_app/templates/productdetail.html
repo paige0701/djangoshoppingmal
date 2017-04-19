@@ -18,9 +18,14 @@
             </div>
 
 
+            <form action="{% url 'cartadd' product.id %}" method="post">
+                {% csrf_token %}
+                <label for="quantity">Quantity</label>
+                <input type="number" name="quantity" value=1 min=1 max=20>
+                <button type="submit" class="btn btn-block btn-default">Cart</button>
+{#                <button type="submit" class="btn btn-block btn-primary">Buy Now</button>#}
+            </form>
 
-            <button class="btn btn-block btn-default">Cart</button>
-            <button class="btn btn-block btn-primary">Buy Now</button>
         </div>
 
 
@@ -44,16 +49,22 @@
             <div class="well">
                 <div class="row">
                     <div class="col-md-12">
-                {% for x in comment %}
-                    <strong>{{ x.author }}</strong>
-                    <span class="pull-right">{{ x.created }}</span>
-                    <p>{{ x.content }}</p>
-                    <hr/>
-                {% endfor %}
+                        {% if comment %}
+                            {% for x in comment %}
+                                <strong>{{ x.author }}</strong>
+                                <span class="pull-right">{{ x.created }}</span>
+                                <p>{{ x.content }}</p>
+                                <hr/>
+                            {% endfor %}
+                        {% else %}
+                            <p></p>
+                            <strong>There are no reviews yet</strong>
+                            <p></p>
+                        {% endif %}
 
                     </div>
                 </div>
-                
+
 
                 <div class="row">
                     <div class="col-md-12">

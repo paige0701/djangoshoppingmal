@@ -5,7 +5,8 @@ from django.contrib import admin
 from django.views.generic.edit import CreateView
 from django.contrib.auth import views as auth_views
 
-from shopping_app.views import index, signup, activate, aaa, beforelogin, accountactivationsent, category
+from shopping_app.views import index, signup, activate, aaa, beforelogin, accountactivationsent, category, cart_add, \
+    cart, cart_edit
 from social_django.urls import urlpatterns as social_django_urls
 
 from shopping_app.views import detail
@@ -37,6 +38,12 @@ urlpatterns = [
 
     url(r'^detail/(?P<id>[0-9]+)/$', detail, name='detail'),
     url(r'^category/(?P<id>[0-9]+)/$', category, name='category'),
+
+
+    # cart
+    url(r'^cart/$', cart, name='cart'),
+    url(r'^cart/add/(?P<id>[0-9]+)/$', cart_add, name='cartadd'),
+    url(r'^cart/edit/(?P<id>[0-9]+)/$', cart_edit, name='cartedit'),
 
 
     # 이걸 꼭 추가 해야한다 아니면 이미지를 찾지를 못하던데 ??
