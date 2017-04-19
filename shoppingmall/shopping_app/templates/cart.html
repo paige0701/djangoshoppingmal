@@ -3,12 +3,14 @@
     <div class="col-md-12">
         {% if cart %}
             <div class="row">
-                {#                <div class="col-md-1 bg-primary"><input type="checkbox" /></div>#}
+
                 <div class="col-md-3 bg-primary">Product</div>
-                <div class="col-md-3 bg-primary">Price</div>
-                <div class="col-md-2 bg-primary">Quantity</div>
-                <div class="col-md-3 bg-primary">Total</div>
+                <div class="col-md-2 bg-primary">Price</div>
+                <div class="col-md-3 bg-primary">Quantity</div>
+                <div class="col-md-2 bg-primary">Total</div>
+                <div class="col-md-2 bg-primary">Delete</div>
             </div>
+
             {%  for x in cart %}
 
                 <div class="row">
@@ -16,30 +18,29 @@
                         {% csrf_token %}
                         {#                        <div class="col-md-1"><input type="checkbox" /></div>#}
                         <div class="col-md-3">{{ x.product.name }}</div>
-                        <div class="col-md-3">{{ x.product.price }}</div>
-                        <div class="col-md-2">
+                        <div class="col-md-2">{{ x.product.price }}</div>
+                        <div class="col-md-3">
                             <input type="number" min=1 max=20 value="{{ x.quantity }}" name="quantity" />
                             <button type="submit" class="btn btn-default btn-sm list-inline">update</button>
                         </div>
+
                     </form>
 
-                    <div class="col-md-3">
+                    <div class="col-md-2">
 
                         {{ x.get_subtotal }}
 
-
                     </div>
+                    <form action="{% url 'cartdelete' x.product.id %}" method="post">
+                        {% csrf_token %}
+                        <div class="col-md-2"><button type="submit" class="btn btn-default">Delete</button></div>
+                    </form>
                 </div>
 
             {% endfor %}
 
         {% else %}
             <p>There is nothing in the cart</p>
-
-
-            <div>
-                <a href="{% url 'home' %}" class="btn btn-default" >Home</a>
-            </div>
 
         {% endif %}
         <p></p>
@@ -50,7 +51,7 @@
         <p></p>
         <div>
             <a href="{% url 'home' %}" class="btn btn-default" >Home</a>
-            <a href="{% url 'home' %}" class="btn btn-danger" >Checkout</a>
+            <a href="" class="btn btn-danger" >Checkout</a>
         </div>
     </div>
 {% endblock %}

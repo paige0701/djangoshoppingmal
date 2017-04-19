@@ -6,10 +6,13 @@ from django.views.generic.edit import CreateView
 from django.contrib.auth import views as auth_views
 
 from shopping_app.views import index, signup, activate, aaa, beforelogin, accountactivationsent, category, cart_add, \
-    cart, cart_edit
+    cart, cart_edit, cart_delete
 from social_django.urls import urlpatterns as social_django_urls
 
 from shopping_app.views import detail
+
+
+
 
 urlpatterns = [
     # url(r'^register/', CreateView.as_view(
@@ -44,6 +47,8 @@ urlpatterns = [
     url(r'^cart/$', cart, name='cart'),
     url(r'^cart/add/(?P<id>[0-9]+)/$', cart_add, name='cartadd'),
     url(r'^cart/edit/(?P<id>[0-9]+)/$', cart_edit, name='cartedit'),
+    url(r'^cart/delete/(?P<id>[0-9]+)/$', cart_delete, name='cartdelete'),
+
 
 
     # 이걸 꼭 추가 해야한다 아니면 이미지를 찾지를 못하던데 ??

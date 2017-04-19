@@ -183,3 +183,22 @@ def cart_add(request,id):
 
 
         return render(request, 'cart.html', {'cart': cart, 'total':total} )
+
+def cart_delete(request,id):
+    total = 0
+    user = request.user.id
+    user = User.objects.get(id=user)
+    product = Product.objects.get(id=id)
+
+    if request.method =='POST':
+
+        cart = Cart.objects.filter(user=user, product=product)
+        cart.delete()
+
+        for x in cart:
+            total += x.get_subtotal()
+
+
+        cart = Cart.objects.filter(user=user)
+
+        return render(request, 'cart.html', {'cart': cart, 'total':total} )
