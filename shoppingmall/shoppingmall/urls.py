@@ -6,7 +6,7 @@ from django.views.generic.edit import CreateView
 from django.contrib.auth import views as auth_views
 
 from shopping_app.views import index, signup, activate, aaa, beforelogin, accountactivationsent, category, cart_add, \
-    cart, cart_edit, cart_delete
+    cart, cart_edit, cart_delete, popular, like, comment
 from social_django.urls import urlpatterns as social_django_urls
 
 from shopping_app.views import detail
@@ -25,6 +25,7 @@ urlpatterns = [
     url(r'^login/$',auth_views.login, {'template_name': 'auth/login.html'}, name='login'),
     url(r'^logout/',auth_views.logout,{'next_page':'/'}, name='logout'),
     url(r'^$', index, name='home'),
+    url(r'^popular/$', popular, name='popular'),
 
 
     url(r'^accountactivationsent/$', accountactivationsent, name='accountactivationsent'),
@@ -40,14 +41,21 @@ urlpatterns = [
     url(r'^beforelogin/$', beforelogin, name='beforelogin'),
 
     url(r'^detail/(?P<id>[0-9]+)/$', detail, name='detail'),
+
+    # product like
+    url(r'^detail/(?P<id>[0-9]+)/like/$', like, name='like'),
+
     url(r'^category/(?P<id>[0-9]+)/$', category, name='category'),
 
+    #comment
+    url(r'^detail/(?P<id>[0-9]+)/comment/$', comment, name='comment'),
 
     # cart
     url(r'^cart/$', cart, name='cart'),
     url(r'^cart/add/(?P<id>[0-9]+)/$', cart_add, name='cartadd'),
     url(r'^cart/edit/(?P<id>[0-9]+)/$', cart_edit, name='cartedit'),
     url(r'^cart/delete/(?P<id>[0-9]+)/$', cart_delete, name='cartdelete'),
+
 
 
 

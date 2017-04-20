@@ -10,7 +10,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 
 from shopping_app.forms import RegisterForm, CommentForm
 from django.contrib.auth import login
-from shopping_app.models import User, Product, Category, Comment, Cart
+from shopping_app.models import User, Product, Category, Comment, Cart, Like
 from shopping_app.tokens import account_activation_token
 from django.contrib.auth.backends import ModelBackend
 from django.core.mail import send_mail
@@ -21,19 +21,25 @@ from shopping_app.utils import ViewIncrease, CommentClass, CartClass
 def beforelogin(request):
     return render(request,'beforelogin.html')
 
+
 def accountactivationsent(request):
     print("activation sent !!!")
     return render(request, 'auth/account_activation_sent.html')
 
-def index(request):
-    print("$$$ this is called !!cl")
 
-    # product = Product.objects.all()
-    product = Product.objects.order_by('-views')
+def index(request):
+
+    product = Product.objects.order_by('-created_at')
+
     category = Category.objects.all()
 
+    return render(request, 'home.html', {'product':product, 'category':category})
 
-    # Poducts.object.all()
+
+def popular(request):
+
+    product = Product.objects.order_by('-views')
+    category = Category.objects.all()
 
     return render(request, 'home.html', {'product':product, 'category':category})
 
@@ -95,8 +101,8 @@ def activate(request, uidb64, token):
 
 
 # 로그인을 하지 않으면 detail 페이지로 갈 수 없게 한다
-# if not logged in, it redirects to login
-@login_required(login_url='login')
+# if not logged in, it redirects to login (setting.py 에 설정 했음)
+@login_required
 def detail(request, id):
 
     # increase view count
@@ -108,26 +114,27 @@ def detail(request, id):
 
     form = CommentForm()
 
+    return render(request, 'productdetail.html', {'product':product, 'form':form, 'comment':comment} )
+
+@login_required
+def comment(request,id):
+
     # if comment form is submitted
     if request.method == 'POST':
         form = CommentForm(request.POST)
 
         # and if form that is submitted is validated
         if form.is_valid():
-
             # getting the content from the form
             content = request.POST.get('content')
 
             # adding the comment
-            CommentClass().addcomment(request.user.id,content,id)
+            CommentClass().addcomment(request.user.id, content, id)
 
             # only getting the comment related to this product id
             comment = Comment.objects.filter(product=id)
 
-            form = CommentForm()
-            return render(request, 'productdetail.html', {'product':product, 'form':form, 'comment':comment})
-
-    return render(request, 'productdetail.html', {'product':product, 'form':form, 'comment':comment} )
+            return redirect(reverse('detail', kwargs={'id':id}))
 
 
 def category(request, id):
@@ -202,3 +209,25 @@ def cart_delete(request,id):
         cart = Cart.objects.filter(user=user)
 
         return render(request, 'cart.html', {'cart': cart, 'total':total} )
+
+
+def like(request,id):
+
+
+    user_id = request.user.id
+    product = Product.objects.get(id=id)
+
+
+    like = Like.objects.filter(user_id=user_id, product_id=id)
+    if like :
+        like.delete()
+        product.likes -= 1
+        product.save()
+
+    else:
+        like = Like(user_id=user_id, product_id=id)
+        like.save()
+        product.likes += 1
+        product.save()
+
+    return redirect(reverse('detail', kwargs={'id':id}))

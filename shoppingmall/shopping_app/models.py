@@ -53,6 +53,7 @@ class Product(models.Model):
     manufacturer = models.CharField(max_length=50)
     category = models.ForeignKey(Category)
     # comments = models.ForeignKey(Comment, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.name
@@ -89,5 +90,9 @@ class Cart(models.Model):
         return subtotal
 
 
+class Like(models.Model):
+    user = models.ForeignKey(User)
+    product = models.ForeignKey(Product)
+    created_at = models.DateTimeField(auto_now_add=True)
 
 
