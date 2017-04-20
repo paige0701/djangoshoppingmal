@@ -50,6 +50,7 @@ def signup(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
+            print("user ==== ?? ", user)
             user.save()
             current_site = get_current_site(request)
             subject = 'Activate Your MySite Account'
