@@ -106,8 +106,11 @@ def activate(request, uidb64, token):
 @login_required
 def detail(request, id):
 
-    # increase view count
-    ViewIncrease().increaseview(id=id)
+
+    # increase view count : check if it has already increased the view count with session
+    if not request.session.get('has_increased'):
+        ViewIncrease().increaseview(id=id)
+        request.session['has_increased'] = True
 
     product = Product.objects.get(id=id)
 
@@ -119,6 +122,7 @@ def detail(request, id):
 
 @login_required
 def comment(request,id):
+
 
     # if comment form is submitted
     if request.method == 'POST':

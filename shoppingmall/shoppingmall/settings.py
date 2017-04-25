@@ -172,7 +172,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
-LOGIN_URL = '/'
+LOGIN_URL = 'login'
 LOGOUT_URL = '/'
 LOGIN_REDIRECT_URL = '/'
 
@@ -239,3 +239,8 @@ SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
 SOCAIL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
     'fields': 'id, name'
 }
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE=False
+SESSION_COOKIE_AGE = 60*60
+
+

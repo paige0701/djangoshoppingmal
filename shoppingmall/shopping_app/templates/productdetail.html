@@ -52,6 +52,9 @@
                         {% if comment %}
                             {% for x in comment %}
                                 <strong>{{ x.author }}</strong>
+                                {% if x.author_id == user.id %}
+                                    <a href="" class="btn btn-default btn-xs">edit</a>
+                                 {% endif %}
                                 <span class="pull-right">{{ x.created }}</span>
                                 <p>{{ x.content }}</p>
                                 <hr/>
