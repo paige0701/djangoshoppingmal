@@ -4,7 +4,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from shopping_app.views import index, signup, activate, accountactivationsent, category, cart_add, \
-    cart, cart_edit, cart_delete, popular, like, comment, detail, comment_delete, comment_edit
+    cart, cart_edit, cart_delete, popular, like, comment, detail, comment_delete, comment_edit, comment_update
 
 urlpatterns = [
     # url(r'^register/', CreateView.as_view(
@@ -40,6 +40,7 @@ urlpatterns = [
     url(r'^detail/(?P<id>[0-9]+)/comment/$', comment, name='comment'),
     url(r'^detail/(?P<id>[0-9]+)/comment/(?P<commentid>[0-9]+)/delete/$', comment_delete, name='deletecomment'),
     url(r'^detail/(?P<id>[0-9]+)/comment/(?P<commentid>[0-9]+)/edit/$', comment_edit, name='editcomment'),
+    url(r'^detail/(?P<id>[0-9]+)/comment/(?P<commentid>[0-9]+)/update/$', comment_update, name='updatecomment'),
 
     # cart
     url(r'^cart/$', cart, name='cart'),

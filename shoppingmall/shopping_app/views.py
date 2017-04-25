@@ -125,7 +125,21 @@ def comment(request,id):
 
 
 def comment_edit(request, id, commentid):
-    pass
+
+    comment = Comment.objects.get(id=commentid)
+    return render(request, 'comment_edit.html', {'comment':comment, 'id':id})
+
+def comment_update(request,id, commentid):
+
+    content = request.POST.get('content')
+
+    comment = Comment.objects.get(id=commentid)
+    comment.content = content
+
+    comment.save()
+
+
+    return redirect(reverse('detail', kwargs={'id':id}))
 
 
 def comment_delete(request, id, commentid):

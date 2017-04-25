@@ -53,7 +53,7 @@
                             {% for x in comment %}
                                 <strong>{{ x.author }}</strong>
                                 {% if x.author_id == user.id %}
-                                    <a href="" class="btn btn-default btn-xs">edit</a>
+                                    <a href="{% url 'editcomment' product.id x.id %}" class="btn btn-default btn-xs">edit</a>
                                     <a href="{% url 'deletecomment' id=product.id commentid=x.id %}" class="btn btn-default btn-xs">delete</a>
                                  {% endif %}
                                 <span class="pull-right">{{ x.created }}</span>
