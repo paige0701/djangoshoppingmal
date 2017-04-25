@@ -2,17 +2,9 @@ from django.conf import settings
 from django.conf.urls import url, include
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.views.generic.edit import CreateView
 from django.contrib.auth import views as auth_views
-
-from shopping_app.views import index, signup, activate, aaa, beforelogin, accountactivationsent, category, cart_add, \
-    cart, cart_edit, cart_delete, popular, like, comment
-from social_django.urls import urlpatterns as social_django_urls
-
-from shopping_app.views import detail
-
-
-
+from shopping_app.views import index, signup, activate, accountactivationsent, category, cart_add, \
+    cart, cart_edit, cart_delete, popular, like, comment, detail, comment_delete, comment_edit
 
 urlpatterns = [
     # url(r'^register/', CreateView.as_view(
@@ -29,7 +21,6 @@ urlpatterns = [
 
 
     url(r'^accountactivationsent/$', accountactivationsent, name='accountactivationsent'),
-    url(r'^aaa/$', aaa, name='aaa'),
     url(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
         activate, name='activate'),
 
@@ -38,8 +29,6 @@ urlpatterns = [
     url(r'', include('social_django.urls', namespace='social')),
     # url(r'^oauth/', include('social_django.urls', namespace='social')),  # <--
     # url(r'', include('social.apps.django_app.urls', namespace='social')),
-    url(r'^beforelogin/$', beforelogin, name='beforelogin'),
-
     url(r'^detail/(?P<id>[0-9]+)/$', detail, name='detail'),
 
     # product like
@@ -47,8 +36,10 @@ urlpatterns = [
 
     url(r'^category/(?P<id>[0-9]+)/$', category, name='category'),
 
-    #comment
+    # comment
     url(r'^detail/(?P<id>[0-9]+)/comment/$', comment, name='comment'),
+    url(r'^detail/(?P<id>[0-9]+)/comment/(?P<commentid>[0-9]+)/delete/$', comment_delete, name='deletecomment'),
+    url(r'^detail/(?P<id>[0-9]+)/comment/(?P<commentid>[0-9]+)/edit/$', comment_edit, name='editcomment'),
 
     # cart
     url(r'^cart/$', cart, name='cart'),

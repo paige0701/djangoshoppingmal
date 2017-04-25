@@ -18,15 +18,7 @@ from django.conf import settings
 from shopping_app.utils import ViewIncrease, CommentClass, CartClass
 
 
-def beforelogin(request):
-    return render(request,'beforelogin.html')
-
-
-def accountactivationsent(request):
-    print("activation sent !!!")
-    return render(request, 'auth/account_activation_sent.html')
-
-
+# ==============  HOME  =============
 def index(request):
 
     product = Product.objects.order_by('-created_at')
@@ -42,6 +34,20 @@ def popular(request):
     category = Category.objects.all()
 
     return render(request, 'home.html', {'product':product, 'category':category})
+
+
+def category(request, id):
+
+    one = Category.objects.get(id=id)
+    product = Product.objects.filter(category=id)
+
+    return render(request, 'category.html', {'product':product, 'one':one})
+
+
+# ==============  USER  =============
+def accountactivationsent(request):
+    print("activation sent !!!")
+    return render(request, 'auth/account_activation_sent.html')
 
 
 def signup(request):
@@ -77,12 +83,6 @@ def signup(request):
     return render(request, 'auth/register.html', {'form':form})
 
 
-def aaa(request):
-    print("here ???")
-    console.log("hello ?")
-    return render(request, 'aaa.html')
-
-
 def activate(request, uidb64, token):
     print('여기 까지 오나 ?')
     try:
@@ -101,28 +101,10 @@ def activate(request, uidb64, token):
         return render(request, 'auth/account_activation_invalid.html')
 
 
-# 로그인을 하지 않으면 detail 페이지로 갈 수 없게 한다
-# if not logged in, it redirects to login (setting.py 에 설정 했음)
-@login_required
-def detail(request, id):
 
-
-    # increase view count : check if it has already increased the view count with session
-    if not request.session.get('has_increased'):
-        ViewIncrease().increaseview(id=id)
-        request.session['has_increased'] = True
-
-    product = Product.objects.get(id=id)
-
-    comment = Comment.objects.filter(product=id)
-
-    form = CommentForm()
-
-    return render(request, 'productdetail.html', {'product':product, 'form':form, 'comment':comment} )
-
+# ==============  COMMENTS  =============
 @login_required
 def comment(request,id):
-
 
     # if comment form is submitted
     if request.method == 'POST':
@@ -136,20 +118,23 @@ def comment(request,id):
             # adding the comment
             CommentClass().addcomment(request.user.id, content, id)
 
-            # only getting the comment related to this product id
-            comment = Comment.objects.filter(product=id)
+            # # only getting the comment related to this product id
+            # comment = Comment.objects.filter(product=id)
 
             return redirect(reverse('detail', kwargs={'id':id}))
 
 
-def category(request, id):
-
-    one = Category.objects.get(id=id)
-    product = Product.objects.filter(category=id)
-
-    return render(request, 'category.html', {'product':product, 'one':one})
+def comment_edit(request, id, commentid):
+    pass
 
 
+def comment_delete(request, id, commentid):
+    comment = Comment.objects.get(id=commentid)
+    comment.delete()
+    return redirect(reverse('detail', kwargs={'id':id}))
+
+
+# ==============  CART  =============
 def cart(request):
 
     cart = Cart.objects.filter(user=request.user.id)
@@ -214,6 +199,27 @@ def cart_delete(request,id):
         cart = Cart.objects.filter(user=user)
 
         return render(request, 'cart.html', {'cart': cart, 'total':total} )
+
+
+# ==============  PRODUCT DETAIL  =============
+# 로그인을 하지 않으면 detail 페이지로 갈 수 없게 한다
+# if not logged in, it redirects to login (setting.py 에 설정 했음)
+@login_required
+def detail(request, id):
+
+
+    # increase view count : check if it has already increased the view count with session
+    if not request.session.get('has_increased'):
+        ViewIncrease().increaseview(id=id)
+        request.session['has_increased'] = True
+
+    product = Product.objects.get(id=id)
+
+    comment = Comment.objects.filter(product=id)
+
+    form = CommentForm()
+
+    return render(request, 'productdetail.html', {'product':product, 'form':form, 'comment':comment} )
 
 
 def like(request,id):
