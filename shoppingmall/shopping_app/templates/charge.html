@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+{#{% load staticfiles %}#}
+{#    <script src="https://code.jquery.com/jquery-2.2.4.min.js" />#}
+{% block extrascripts %}
+    <script type="text/javascript">
+        alert("hello")
+        $(function () {
+            var IMP = window.IMP;
+            // 가맹점 코드
+            IMP.init('imp61177917');
+
+            $('.charge-button').on('click', function (e) {
+                var amount = parseInt($('.charge-total #total').text().replace(',', '').slice(0, -1));
+                var type = $('.charge-type input:checked').val();
+                var merchant_id = AjaxStoreTransaction(e, amount, type);
+
+                if (merchant_id !== '') {
+                    IMP.request_pay({
+                        pg: 'html5_inicis',
+                        escrow: false,
+                        digital: true,
+                        pay_method: type,
+                        merchant_uid: merchant_id,
+                        name: '포인트' + amount + '원 충전',
+                        amount: amount
+                    }, function (rsp) {
+                        if (rsp.success) {
+                            var msg = '결제가 완료되었습니다.';
+                            msg += '고유ID : ' + rsp.imp_uid;
+                            msg += '상점 거래ID : ' + rsp.merchant_uid;
+                            msg += '결제 금액 : ' + rsp.paid_amount;
+                            msg += '카드 승인번호 : ' + rsp.apply_num;
+                            ImpTransaction(e, rsp.merchant_uid, rsp.imp_uid, rsp.paid_amount);
+                        } else {
+                            var msg = '결제에 실패하였습니다.';
+                            msg += '에러내용 : ' + rsp.error_msg;
+                            console.log(msg);
+                        }
+                    });
+                }
+            });
+        });
+
+        function AjaxStoreTransaction(e, amount, type) {
+            e.preventDefault();
+            var merchant_id = '';
+            var request = $.ajax({
+                method: "POST",
+                url: '{% url "point_checkout" %}',
+                async: false,
+                data: {
+                    amount: amount,
+                    type: type,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                }
+            });
+            request.done(function (data) {
+                if (data.works) {
+                    merchant_id = data.merchant_id;
+                }
+            });
+            request.fail(function (jqXHR, textStatus) {
+                if (jqXHR.status == 404) {
+                    alert("페이지가 존재하지 않습니다.");
+                } else if (jqXHR.status == 403) {
+                    alert("로그인 해주세요.");
+                } else {
+                    alert("문제가 발생했습니다. 다시 시도해주세요.");
+                }
+            });
+            return merchant_id;
+        }
+
+        function ImpTransaction(e, merchant_id, imp_id, amount) {
+            e.preventDefault();
+            var request = $.ajax({
+                method: "POST",
+                url: '{% url "point_validation" %}',
+                async: false,
+                data: {
+                    merchant_id: merchant_id,
+                    imp_id: imp_id,
+                    amount: amount,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                }
+            });
+            request.done(function (data) {
+                if (data.works) {
+                }
+            });
+            request.fail(function (jqXHR, textStatus) {
+                if (jqXHR.status == 404) {
+                    alert("페이지가 존재하지 않습니다.");
+                } else if (jqXHR.status == 403) {
+                    alert("로그인 해주세요.");
+                } else {
+                    alert("문제가 발생했습니다. 다시 시도해주세요.");
+                }
+            });
+        }
+    </script>
+
+{% endblock %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        {{ user }}으로 접속되어 있습니다.
+    {% else %}
+        로그인 해주세요!
+    {% endif %}
+
+    <div class="charge-type">
+        <div class="billing-title">
+            결제방식
+        </div>
+        <div class="billing-radio">
+            <label class="control control--radio">
+                <input type="radio" name="type" value="card" checked="checked"/>
+                신용카드
+            </label>
+            <label class="control control--radio">
+                <input type="radio" name="type" value="trans"/>
+                실시간 계좌이체
+            </label>
+            <label class="control control--radio">
+                <input type="radio" name="type" value="phone"/>
+                휴대폰
+            </label>
+            <label class="control control--radio">
+                <input type="radio" name="type" value="vbank"/>
+                가상계좌 입금
+            </label>
+        </div>
+    </div>
+    <div class="charge-total">
+        총 결제금액 <span id="total">1000원</span>
+    </div>
+    <div class="charge-click">
+        <button class="charge-button">충전하기</button>
+    </div>
+{% endblock %}

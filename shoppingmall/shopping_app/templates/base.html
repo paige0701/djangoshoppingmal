@@ -13,44 +13,56 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     {#    <link rel="apple-touch-icon" href="{% static "apple-touch-icon.png" %}">#}
+    {% block corescripts %}
+        <script src="{% static "jquery/dist/jquery.js" %}"></script>
+    {% endblock %}
+    {% block styles %}
+        <link rel="stylesheet" href="{% static "bootstrap/dist/css/bootstrap.min.css" %}">
+        <style>
+            body {
+                padding-top: 60px;
+                padding-bottom: 20px;
+            }
+        </style>
 
-    <link rel="stylesheet" href="{% static "bootstrap/dist/css/bootstrap.min.css" %}">
-    <style>
-        body {
-            padding-top: 60px;
-            padding-bottom: 20px;
-        }
-    </style>
-    <script src="{% static "jquery/dist/jquery.js" %}"></script>
-    <script type="text/javascript" src="{% static "bootstrap/dist/js/bootstrap.min.js" %}"></script>
-    <link rel="stylesheet" href="{% static "bootstrap/dist/css/bootstrap.min.css" %}">
-    <link rel="stylesheet" href="{% static "bootstrap/dist/css/bootstrap-theme.min.css" %}">
-    <link rel="stylesheet" href="{% static "css/main.css" %}">
+        <link rel="stylesheet" href="{% static "bootstrap/dist/css/bootstrap.min.css" %}">
+        <link rel="stylesheet" href="{% static "bootstrap/dist/css/bootstrap-theme.min.css" %}">
+        <link rel="stylesheet" href="{% static "css/main.css" %}">
+    {% endblock %}
+
+
+
+
     {##}
     <!--[if lt IE 9]>
             <script src="{% static "js/vendor/html5-3.6-respond-1.4.2.min.js" %}"></script>
         <![endif]-->
 </head>
 <body>
-<script>
-    window.fbAsyncInit = function() {
-        FB.init({
-            appId      : '1441816456116895',
-            cookie     : true,
-            xfbml      : true,
-            version    : 'v2.8'
-        });
-        FB.AppEvents.logPageView();
-    };
+{% block script %}
+    <script type="text/javascript" src="https://service.iamport.kr/js/iamport.payment-1.1.1.js"/>
+    <script type="text/javascript" src="{% static "bootstrap/dist/js/bootstrap.min.js" %}"></script>
+    <script>
+        window.fbAsyncInit = function() {
+            FB.init({
+                appId      : '1441816456116895',
+                cookie     : true,
+                xfbml      : true,
+                version    : 'v2.8'
+            });
+            FB.AppEvents.logPageView();
+        };
 
-    (function(d, s, id){
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) {return;}
-        js = d.createElement(s); js.id = id;
-        js.src = "//connect.facebook.net/en_US/sdk.js";
-        fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));
-</script>
+        (function(d, s, id){
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) {return;}
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+    </script>
+{% endblock %}
+
 
 <!--[if lt IE 8]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
@@ -68,33 +80,25 @@
     <div class="row">
 
         <div class="col-md-3">
-{#            <p class='lead'></p>#}
-                <div class="list-group">
-                    <a href="{% url 'popular' %}"><li class="list-group-item">Best 100</li></a>
-                    <a href="{% url 'category' 2 %}"><li class="list-group-item" >Beverages</li></a>
-                    <a href="{% url 'category' 1 %}"><li class="list-group-item">Food</li></a>
-                </div>
+            {#            <p class='lead'></p>#}
+            <div class="list-group">
+                <a href="{% url 'popular' %}"><li class="list-group-item">Best 100</li></a>
+                <a href="{% url 'category' 2 %}"><li class="list-group-item" >Beverages</li></a>
+                <a href="{% url 'category' 1 %}"><li class="list-group-item">Food</li></a>
+            </div>
         </div>
         <div class="col-md-9">
             <div>
                 {% block content %}{% endblock %}
             </div>
         </div>
-{#        <div class="col-md-2">#}
-            {#            <div class="panel panel-primary">#}
-            {#                <div class="panel-heading">Tag cloud</div>#}
-            {#                <div class="panel-body">#}
-            {#                    {% block sidebar %}#}
-            {#                        {% tagcloud %}#}
-            {#                    {% endblock %}#}
-            {#                </div>#}
-            {#            </div>#}
-{#        </div>#}
     </div>
     <hr>
+    {% block extrascripts %}{% endblock %}
 
     {% include "footer.html" %}
-</div> <!-- /container -->
+</div>
+<!-- /container -->
 {#<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>#}
 {#<script>window.jQuery || document.write('<script src="{% static "jquery/dist/jquery.min.js" %}"><\/script>')</script>#}
 
@@ -102,14 +106,15 @@
 
 {#<script src="{% static "js/main.js" %}"></script>#}
 
-<!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
-<script>
-    (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
-            function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
-        e=o.createElement(i);r=o.getElementsByTagName(i)[0];
-        e.src='//www.google-analytics.com/analytics.js';
-        r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
-    ga('create','UA-XXXXX-X','auto');ga('send','pageview');
-</script>
+{#<!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->#}
+{#<script>#}
+{#    (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=#}
+{#            function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;#}
+{#        e=o.createElement(i);r=o.getElementsByTagName(i)[0];#}
+{#        e.src='//www.google-analytics.com/analytics.js';#}
+{#        r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));#}
+{#    ga('create','UA-XXXXX-X','auto');ga('send','pageview');#}
+{#</script>#}
+
 </body>
 </html>

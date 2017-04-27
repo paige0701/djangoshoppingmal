@@ -3,6 +3,8 @@ from django.conf.urls import url, include
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
+
+from billing.views import charge_point, PointCheckoutAjaxView, PointImpAjaxView
 from shopping_app.views import index, signup, activate, accountactivationsent, category, cart_add, \
     cart, cart_edit, cart_delete, popular, like, comment, detail, comment_delete, comment_edit, comment_update
 
@@ -48,7 +50,11 @@ urlpatterns = [
     url(r'^cart/edit/(?P<id>[0-9]+)/$', cart_edit, name='cartedit'),
     url(r'^cart/delete/(?P<id>[0-9]+)/$', cart_delete, name='cartdelete'),
 
+    url(r'^charge/$', charge_point),
+    url(r'^checkout/$', PointCheckoutAjaxView.as_view(), name='point_checkout'),
+    url(r'^validation/$', PointImpAjaxView.as_view(), name='point_validation'),
 
+    url(r'^admin/', admin.site.urls),
 
 
     # 이걸 꼭 추가 해야한다 아니면 이미지를 찾지를 못하던데 ??
