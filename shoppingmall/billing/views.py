@@ -72,3 +72,6 @@ def charge_point(request):
     template = 'charge.html'
 
     return render(request, template)
+
+def checkout(request):
+    return render(request,'checkout.html')

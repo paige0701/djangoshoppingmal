@@ -1,5 +1,26 @@
 {% extends 'base.html' %}
 
+{% block extrascripts %}
+    <script type="text/javascript">
+
+
+        $(function(){
+            $('.cart').on('click', function(data){
+                $('#frm').attr('action','{% url "cartadd" product.id %}' );
+                $('#frm').submit();
+            });
+
+            $('.checkout').on('click', function(data){
+                $('#frm').attr('action','{% url "checkout" %}' );
+                $('#frm').submit();
+            });
+
+
+        })
+
+    </script>
+
+{% endblock %}
 {% block content %}
 
     <div class="row">
@@ -18,12 +39,12 @@
             </div>
 
 
-            <form action="{% url 'cartadd' product.id %}" method="post">
+            <form method="post" id="frm">
                 {% csrf_token %}
                 <label for="quantity">Quantity</label>
-                <input type="number" name="quantity" value=1 min=1 max=20>
-                <button type="submit" class="btn btn-block btn-default">Cart</button>
-{#                <button type="submit" class="btn btn-block btn-primary">Buy Now</button>#}
+                <input type="number" name="quantity" value=1 min=1 max=20 />
+                <a class="btn btn-block btn-default cart" >Cart</a>
+                <a class="btn btn-block btn-primary checkout">Buy Now</a>
             </form>
 
         </div>
@@ -55,7 +76,7 @@
                                 {% if x.author_id == user.id %}
                                     <a href="{% url 'editcomment' product.id x.id %}" class="btn btn-default btn-xs">edit</a>
                                     <a href="{% url 'deletecomment' id=product.id commentid=x.id %}" class="btn btn-default btn-xs">delete</a>
-                                 {% endif %}
+                                {% endif %}
                                 <span class="pull-right">{{ x.created }}</span>
                                 <p>{{ x.content }}</p>
                                 <hr/>
